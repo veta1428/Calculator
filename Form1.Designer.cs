@@ -44,6 +44,8 @@ namespace sum
             this.Gradient = new System.Windows.Forms.PictureBox();
             this.Calculator = new System.Windows.Forms.Label();
             this.White = new System.Windows.Forms.PictureBox();
+            this.CheckMistakeFirst = new System.Windows.Forms.Label();
+            this.CheckMistakeSecond = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Gradient)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.White)).BeginInit();
             this.SuspendLayout();
@@ -81,7 +83,6 @@ namespace sum
             this.ResultLabel.Size = new System.Drawing.Size(47, 52);
             this.ResultLabel.TabIndex = 2;
             this.ResultLabel.Text = "0";
-            this.ResultLabel.Click += new System.EventHandler(this.ResultLabel_Click);
             // 
             // FirstNWord
             // 
@@ -94,7 +95,6 @@ namespace sum
             this.FirstNWord.Size = new System.Drawing.Size(264, 52);
             this.FirstNWord.TabIndex = 3;
             this.FirstNWord.Text = "1st number:";
-            this.FirstNWord.Click += new System.EventHandler(this.label2_Click);
             // 
             // SecondNWord
             // 
@@ -209,9 +209,6 @@ namespace sum
             this.Gradient.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.Gradient.TabIndex = 12;
             this.Gradient.TabStop = false;
-            this.Gradient.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pictureBox1_LoadCompleted);
-            this.Gradient.Click += new System.EventHandler(this.pictureBox1_Click);
-            this.Gradient.Layout += new System.Windows.Forms.LayoutEventHandler(this.pictureBox1_Layout);
             // 
             // Calculator
             // 
@@ -221,9 +218,9 @@ namespace sum
             this.Calculator.Location = new System.Drawing.Point(304, 137);
             this.Calculator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Calculator.Name = "Calculator";
-            this.Calculator.Size = new System.Drawing.Size(725, 78);
+            this.Calculator.Size = new System.Drawing.Size(705, 78);
             this.Calculator.TabIndex = 13;
-            this.Calculator.Text = "Calculator for integers";
+            this.Calculator.Text = "Calculator for double";
             // 
             // White
             // 
@@ -236,11 +233,35 @@ namespace sum
             this.White.TabIndex = 14;
             this.White.TabStop = false;
             // 
+            // CheckMistakeFirst
+            // 
+            this.CheckMistakeFirst.AutoSize = true;
+            this.CheckMistakeFirst.BackColor = System.Drawing.Color.White;
+            this.CheckMistakeFirst.ForeColor = System.Drawing.Color.Red;
+            this.CheckMistakeFirst.Location = new System.Drawing.Point(1058, 265);
+            this.CheckMistakeFirst.Name = "CheckMistakeFirst";
+            this.CheckMistakeFirst.Size = new System.Drawing.Size(76, 25);
+            this.CheckMistakeFirst.TabIndex = 15;
+            this.CheckMistakeFirst.Text = "testing";
+            // 
+            // CheckMistakeSecond
+            // 
+            this.CheckMistakeSecond.AutoSize = true;
+            this.CheckMistakeSecond.BackColor = System.Drawing.Color.White;
+            this.CheckMistakeSecond.ForeColor = System.Drawing.Color.Red;
+            this.CheckMistakeSecond.Location = new System.Drawing.Point(1063, 340);
+            this.CheckMistakeSecond.Name = "CheckMistakeSecond";
+            this.CheckMistakeSecond.Size = new System.Drawing.Size(76, 25);
+            this.CheckMistakeSecond.TabIndex = 16;
+            this.CheckMistakeSecond.Text = "testing";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1419, 920);
+            this.Controls.Add(this.CheckMistakeSecond);
+            this.Controls.Add(this.CheckMistakeFirst);
             this.Controls.Add(this.Calculator);
             this.Controls.Add(this.Mistake);
             this.Controls.Add(this.ErrorTable);
@@ -259,7 +280,6 @@ namespace sum
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "MainForm";
             this.Text = "Calculator For Integers";
-            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Gradient)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.White)).EndInit();
             this.ResumeLayout(false);
@@ -284,6 +304,8 @@ namespace sum
         private System.Windows.Forms.PictureBox Gradient;
         private System.Windows.Forms.Label Calculator;
         private System.Windows.Forms.PictureBox White;
+        private System.Windows.Forms.Label CheckMistakeFirst;
+        private System.Windows.Forms.Label CheckMistakeSecond;
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,8 +13,15 @@ namespace sum
 {
     public partial class MainForm : Form
     {
-        int a = 0;
-        int b = 0;
+        double a = 0;
+        double b = 0;
+
+
+        bool mistakeInFirst = false;
+        bool mistakeInSecond = false;
+
+        //NumberFormatInfo formating = new NumberFormatInfo();
+        
 
         public MainForm()
         {
@@ -28,8 +36,15 @@ namespace sum
 
         private void PrintResult()
         {
-            Tuple<int, bool> result = CalculateAndCheck(a, b);
-            if (result.Item2 == true)
+            Tuple<double, bool> result = CalculateAndCheck(a, b);
+            if (mistakeInFirst || mistakeInSecond)
+            {
+                ErrorTable.Text = "Wrong input!";
+                Mistake.Text = "Mistake:";
+                ResultLabel.Text = "ERROR";
+                
+            }
+            else if (result.Item2 == true)
             {
                 ResultLabel.Text = "ERROR";
             }
@@ -39,12 +54,12 @@ namespace sum
             }
         }
 
-        private delegate int Operation(int a, int b);
+        private delegate double Operation(double a, double b);
         Operation calc = (a, b) => 0;
 
-        private Tuple<int, bool> CalculateAndCheck(int a, int b)
+        private Tuple<double, bool> CalculateAndCheck(double a, double b)
         {
-            int result = 0;
+            double result = 0;
             bool isMistake = false;
             try
             {
@@ -85,14 +100,16 @@ namespace sum
             PrintResult();
         }
 
-        private Tuple<Int32, Boolean> CheckStringAndConvert(string str/*, string smth*/)
+        private Tuple<Double, Boolean> CheckStringAndConvert(string str)
         {
-            int result = 0;
+            
+
+            double result = 0;
             bool isInputMistake = false;
 
             try
             {
-                result = Convert.ToInt32(str);
+                result = Convert.ToDouble(str);
             }
             catch (System.FormatException)
             {
@@ -108,43 +125,112 @@ namespace sum
         private void FirstNumber_TextChanged(object sender, EventArgs e)
         {
             string str = FirstNumber.Text;
-            Tuple<int, bool> info = CheckStringAndConvert(str);
 
+            Tuple<double, bool> info = CheckStringAndConvert(str);
+            
+            
             if (info.Item2 == true)
             {
-                FirstNumber.Text = CopyNoLast(FirstNumber.Text);
-                FirstNumber.SelectionStart = FirstNumber.Text.Length;
-                
-                if (FirstNumber.Text.Length == 0)
-                {
-                    FirstNumber.Text = "0";
-                    FirstNumber.SelectionStart = FirstNumber.Text.Length;
-                    a = 0;
-                }
-                else
-                {
-                    a = Convert.ToInt32(FirstNumber.Text);
-                }
+                mistakeInFirst = true;
+                CheckMistakeFirst.Text = "*";
             }
             else
             {
-                a = info.Item1;
-                FirstNumber.Text = a.ToString();
-                FirstNumber.SelectionStart = FirstNumber.Text.Length;
+                mistakeInFirst = false;
+                CheckMistakeFirst.Text = "testing";
             }
+
+            if (mistakeInFirst == false)//deleting nbsp
+            {
+                str = GetStrWithOutNBSP(str);
+                FirstNumber.Text = str;
+                FirstNumber.SelectionStart = str.Length;
+            }
+            string buf = str;
+            str = FormatingZero(str);//getting string without first zeroes
+
+            if (str.Length != 0)
+            {
+                FirstNumber.Text = str;
+                FirstNumber.SelectionStart = str.Length;
+                buf = str;
+            }
+
+            str = ControlMinus(buf);//working on minus
+
+            if (str.Length != 0)
+            {
+                FirstNumber.Text = "-" + str;
+                FirstNumber.SelectionStart = str.Length + 1;
+            }
+
+            a = info.Item1;
 
             PrintResult();
            
         }
-        
-       
-        private string CopyNoLast(string s1)
+        private string GetStrWithOutNBSP(string str)
         {
-            string result = null;
-            int len = s1.Length - 1;
-            for (int i = 0; i < len; i++)
+            string result = "";
+            for (int i = 0; i < str.Length; i++)
             {
-                result += s1[i];
+                if (str[i]!= ' ')
+                {
+                    result += str[i];
+                }
+            }
+            return result;
+        }
+
+        private string ControlMinus(string str)
+        {
+            if (str.Length >= 3)
+            {
+                if (str[0] == '-')
+                {
+                    if (str[1] == '0')
+                    {
+                        if (str[2] == ',' && str.Length >= 4)
+                        {
+                            return WithoutZeroAndSMTH(str, 3);
+                        }
+                        else if (str[2] != '.' && str[2] != ',')
+                        {
+                            return WithoutZeroAndSMTH(str, 2);
+                        }
+                    }
+                }
+            }
+            return "";
+        }
+
+        private string  FormatingZero(string str)
+        {
+
+            if (str.Length >= 2)
+            {                
+                if (str[0] == '0')
+                {
+                    if (str[1] == ',' || str.Length > 2)
+                    {
+                        return WithoutZeroAndSMTH(str, 2);
+                    }
+                    else if (str[1] != '.')
+                    {
+                        return WithoutZeroAndSMTH(str, 1);  
+                    }
+                }
+                
+            }
+            return "";
+        }
+        
+        private string WithoutZeroAndSMTH(string str, int k)
+        {
+            string result = "";
+            for (int i = k; i < str.Length; i++)
+            {
+                result += str[i];
             }
             return result;
         }
@@ -152,65 +238,49 @@ namespace sum
         private void SecondNumber_TextChanged(object sender, EventArgs e)
         {
             string str = SecondNumber.Text;
-            Tuple<int, bool> info = CheckStringAndConvert(str);
+
+
+            Tuple<double, bool> info = CheckStringAndConvert(str);
 
             if (info.Item2 == true)
             {
-                SecondNumber.Text = CopyNoLast(SecondNumber.Text);
-                SecondNumber.SelectionStart = SecondNumber.Text.Length;
+                mistakeInSecond = true;
+                CheckMistakeSecond.Text = "*";
 
-                if (SecondNumber.Text.Length == 0)
-                {
-                    SecondNumber.Text = "0";
-                    SecondNumber.SelectionStart = SecondNumber.Text.Length;
-                    b = 0;
-                }
-                else
-                {
-                    b = Convert.ToInt32(SecondNumber.Text);
-                }
             }
             else
             {
-                b = info.Item1;
-                SecondNumber.Text = b.ToString();
-                SecondNumber.SelectionStart = SecondNumber.Text.Length;
+                mistakeInSecond = false;
+                CheckMistakeSecond.Text = "testing";
             }
 
+            if (mistakeInSecond == false)//deleting nbsp
+            {
+                str = GetStrWithOutNBSP(str);
+                SecondNumber.Text = str;
+                SecondNumber.SelectionStart = str.Length;
+            }
+            string buf = str;
+            str = FormatingZero(str);//getting string without first zeroes
+
+            if (str.Length != 0)
+            {
+                SecondNumber.Text = str;
+                SecondNumber.SelectionStart = str.Length;
+                buf = str;
+            }
+
+            str = ControlMinus(buf);//working on minus
+
+            if (str.Length != 0)
+            {
+                SecondNumber.Text = "-" + str;
+                SecondNumber.SelectionStart = str.Length + 1;
+            }
+
+            b = info.Item1;
+
             PrintResult();
-        }
-
-        private void pictureBox1_LoadCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            //pictureBox1.Load();
-            //pictureBox1.Image = Image.FromFile("C:\Users\Liza\source\repos\sum\sum\wallpaper.jpg");
-        }
-
-        private void pictureBox1_Layout(object sender, LayoutEventArgs e)
-        {
-            //pictureBox1.Load();
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ResultLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            //Form1.Size = new System.Drawing.Size(200, 200);
-            //Form1.Width = 300;
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
