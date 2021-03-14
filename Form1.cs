@@ -165,11 +165,12 @@ namespace sum
                 FirstNumber.SelectionStart = str.Length + 1;
             }
 
-            //str = NoManyComas(buf);
-            //if (str.Length != 0)
-            //{
-            //    FirstNumber.Text = str;
-            //}
+            str = NoManyComas(buf);
+            if (str.Length != 0)
+            {
+                FirstNumber.Text = str;
+                FirstNumber.SelectionStart = str.Length;
+            }
 
 
 
@@ -222,9 +223,17 @@ namespace sum
             {                
                 if (str[0] == '0')
                 {
-                    if (str[1] == ',' && str.Length > 2)// ||
+                    if (str[1] == ',' && str.Length > 2)
                     {
-                        return WithoutZeroAndSMTH(str, 2);
+                        if (str[2] == ',')
+                        {
+                            return WithoutZeroAndSMTH(str, 3);
+                        }
+                        else
+                        {
+                            return WithoutZeroAndSMTH(str, 2);
+                        }
+                       
                     }
                     else if (str[1] != '.' && str[1] != ',')
                     {
@@ -315,11 +324,12 @@ namespace sum
             bool previousWasBadSign = false;
             for (int i = 0; i < str.Length; i++)
             {
-                if (str[i] == ',' && previousWasBadSign == true)
+                if (str[i] == ',' && previousWasBadSign == false)
                 {
-
+                    result += str[i];
+                    previousWasBadSign = true;
                 }
-                else
+                else if (str[i] != ',')
                 {
                     result += str[i];
                     previousWasBadSign = false;
