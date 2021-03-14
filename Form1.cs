@@ -18,22 +18,34 @@ namespace sum
 
 
         bool mistakeInFirst = false;
-        bool mistakeInSecond = false; 
+        bool mistakeInSecond = false;
+
+
+        private delegate double Operation(double a, double b);
+        Operation calc = (a, b) => 0;
+
 
         public MainForm()
         {
             InitializeComponent();
         }
 
-        private void PlusButton_CheckedChanged(object sender, EventArgs e)
-        {
-            calc = (a, b) => checked(a + b);
-            PrintResult();
-        }
+
+
+
+        /// <summary>
+        /// Block of getting calculated result and printing it:
+        /// If there were mistakes in input we have appropriate message.
+        /// If no operations is choosed the result is zero (default operation),
+        /// but it asks user to chooseoperation and don't show result.
+        /// If we had exceptions in calculating meaning it show ERROR in ResultLabel
+        /// </summary>
+        
 
         private void PrintResult()
         {
             Tuple<double, bool> result = CalculateAndCheck(a, b);
+
             if (mistakeInFirst || mistakeInSecond)
             {
                 ErrorTable.Text = "Wrong input!";
@@ -55,8 +67,22 @@ namespace sum
             }
         }
 
-        private delegate double Operation(double a, double b);
-        Operation calc = (a, b) => 0;
+
+
+
+
+
+        /// <summary>
+        /// Block of making operation
+        /// Try to calculate someting (even if the wrong input is displaying in FirstNumber and in SecondNumber we have a or b 0 then,
+        /// so input here is correct
+        /// If some mistakes happend like OverFlow or DivideByZero (here compiler put infinity to it, but still let it be),
+        /// this displays it in ErrorTable and Mistake
+        /// </summary>
+
+       
+
+
 
         private Tuple<double, bool> CalculateAndCheck(double a, double b)
         {
@@ -83,6 +109,19 @@ namespace sum
             return Tuple.Create(result, isMistake);
         }
 
+
+
+
+
+        /// <summary>
+        /// Block of switching operations to be done
+        /// Sends message to calculate result
+        /// </summary>
+        
+
+
+
+
         private void MinusButton_CheckedChanged(object sender, EventArgs e)
         {
             calc = (a, b) => checked(a - b);
@@ -101,10 +140,33 @@ namespace sum
             PrintResult();
         }
 
+        private void PlusButton_CheckedChanged(object sender, EventArgs e)
+        {
+            calc = (a, b) => checked(a + b);
+            PrintResult();
+        }
+
+
+
+
+        /// <summary>
+        /// Block of checking if input is appropriate to further actions
+        /// Sending a message about mistakes or their absence
+        /// </summary>
+
+
+
+
+        //
+        //
+        //
+        //Trying to conver string to double:
+        // if succeeded -> return double value and true
+        // if not -> return 0 and false
+        //
+        //
         private Tuple<Double, Boolean> CheckStringAndConvert(string str)
         {
-            
-
             double result = 0;
             bool isInputMistake = false;
 
@@ -123,14 +185,41 @@ namespace sum
             return Tuple.Create(result, isInputMistake);
         }
 
+
+
+
+
+
+        /// <summary>
+        /// Block of getting input, then it is being checked and corrected (NOT making it valid for operations, just making it look prettier)
+        /// Also it displays if input is correct/ can be used in operatios further
+        /// </summary>
+
+
+
+
+
+
+
+        //
+        //
+        //
+        // Processing input FIRST number
+        // Correcting it
+        // Showing * if it has mistakes
+        // Printing any result
+        //
+        //
+        //
         private void FirstNumber_TextChanged(object sender, EventArgs e)
         {
             string str = FirstNumber.Text;
 
             Tuple<double, bool> info = CheckStringAndConvert(str);
+
             
-            
-            if (info.Item2 == true)
+           //displaying if any mistake exists 
+            if (info.Item2 == true) 
             {
                 mistakeInFirst = true;
                 CheckMistakeFirst.Text = "*";
@@ -138,47 +227,102 @@ namespace sum
             else
             {
                 mistakeInFirst = false;
-                CheckMistakeFirst.Text = "OK";
+                CheckMistakeFirst.Text = "";
             }
 
-            if (mistakeInFirst == false)//deleting nbsp
-            {
-                str = GetStrWithOutNBSP(str);
-                FirstNumber.Text = str;
-                FirstNumber.SelectionStart = str.Length;
-            }
-            string buf = str;
-            str = FormatingZero(str);//getting string without first zeroes
+            str = ProcessInput(str);
 
-            if (str.Length != 0)
-            {
-                FirstNumber.Text = str;
-                FirstNumber.SelectionStart = str.Length;
-                buf = str;
-            }
-
-            str = ControlMinus(buf);//working on minus
-
-            if (str.Length != 0)
-            {
-                FirstNumber.Text = "-" + str;
-                FirstNumber.SelectionStart = str.Length + 1;
-            }
-
-            str = NoManyComas(buf);
-            if (str.Length != 0)
-            {
-                FirstNumber.Text = str;
-                FirstNumber.SelectionStart = str.Length;
-            }
-
-
+            //Showing input
+            FirstNumber.Text = str;
+            FirstNumber.SelectionStart = str.Length;
 
             a = info.Item1;
 
-            PrintResult();
-           
+            PrintResult();          
         }
+        //
+        //
+        //
+        // Processing input SECOND number
+        // Correcting it
+        // Showing * if it has mistakes
+        // Printing any result
+        //
+        //
+        //
+        private void SecondNumber_TextChanged(object sender, EventArgs e)
+        {
+            string str = SecondNumber.Text;
+
+            Tuple<double, bool> info = CheckStringAndConvert(str);
+
+            //displaying mistakes
+            if (info.Item2 == true)
+            {
+                mistakeInSecond = true;
+                CheckMistakeSecond.Text = "*";
+
+            }
+            else
+            {
+                mistakeInSecond = false;
+                CheckMistakeSecond.Text = "";
+            }
+
+            str = ProcessInput(str);
+
+            //showing corrected input
+            SecondNumber.Text = str;
+            SecondNumber.SelectionStart = str.Length;
+
+            b = info.Item1;
+
+            PrintResult();
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// Block of methods to correct input (NOT making it valid for operations, just making it look prettier)
+        /// Used in SecondNumber_TextChanged, FirstNumber_TextChanged (also 1 method is used in Validating for both SecondNumber and FirstNumber)
+        /// The most important and general method of the block is ProcessInput() is used in SecondNumber_TextChanged, FirstNumber_TextChanged
+        /// </summary>
+
+
+
+
+
+
+        //
+        //
+        //
+        // Processing input
+        //
+        //
+        //
+        private string ProcessInput(string str)
+        {
+            //Deleting first " "
+            str = GetStrWithOutNBSP(str);
+
+            //Deleting first zeroes
+            str = FormatingZero(str);
+
+            //Deleting sequences of comas
+            str = NoManyComas(str);
+
+            return str;
+        }
+        //
+        //
+        //
+        // Deleting first " "-s
+        //
+        //
+        //
         private string GetStrWithOutNBSP(string str)
         {
             string result = "";
@@ -191,33 +335,45 @@ namespace sum
             }
             return result;
         }
-
-        private string ControlMinus(string str)
+        //
+        //
+        //
+        // Returns a string without last char
+        //
+        //
+        //
+        private string CopyNoFirst(string str)
         {
+            int len = str.Length;
+            string result = "";
+            for (int i = 1; i < len; i++)
+            {
+                result += str[i];
+            }
+            return result;
+        }
+        //
+        //
+        //    Formating tricks with zero like:
+        //    0,,* go to *
+        //    00 go to 0
+        //    0* go to *
+        //    same with minus forward
+        //
+        //
+        //
+        private string  FormatingZero(string str)
+        {
+            bool wasMinus = false;
+
             if (str.Length >= 3)
             {
                 if (str[0] == '-')
                 {
-                    if (str[1] == '0')
-                    {
-                        if (str[2] == ',' && str.Length > 3)
-                        {
-                            return WithoutZeroAndSMTH(str, 3);
-                        }
-                        else if (str[2] != '.' && str[2] != ',')
-                        {
-                            return WithoutZeroAndSMTH(str, 2);
-                        }
-                    }
+                    str = CopyNoFirst(str);                      //string without minus
+                    wasMinus = true;                             //remembering minus
                 }
             }
-            return "";
-        }
-
-        
-
-        private string  FormatingZero(string str)
-        {
 
             if (str.Length >= 2)
             {                
@@ -225,27 +381,49 @@ namespace sum
                 {
                     if (str[1] == ',' && str.Length > 2)
                     {
-                        if (str[2] == ',')
+                        if (str[2] == ',')                       //case 0,,* go to *
                         {
-                            return WithoutZeroAndSMTH(str, 3);
+                            if (wasMinus == true)                //not to forget minus
+                            {
+                                return "-" + CopyFromKChar(str, 3);
+                            }
+                            return CopyFromKChar(str, 3);
                         }
-                        else
+                        else                                     //case 0,* go to *
                         {
-                            return WithoutZeroAndSMTH(str, 2);
+                            if (wasMinus == true)                //not to forget minus
+                            {
+                                return "-" + CopyFromKChar(str, 2);
+                            }
+                            return CopyFromKChar(str, 2);
                         }
                        
                     }
-                    else if (str[1] != '.' && str[1] != ',')
+                    else if (str[1] != '.' && str[1] != ',')     //case 0* go to *
                     {
-                        return WithoutZeroAndSMTH(str, 1);  
+                        if (wasMinus == true)                    //not to forget minus
+                        {
+                            return "-" + CopyFromKChar(str, 1);
+                        }
+                        return CopyFromKChar(str, 1);  
                     }
-                }
-                
+                }                
             }
-            return "";
+            if (wasMinus == true)                                //not to forget minus
+            {
+                return "-" + str;
+            }
+            
+            return str;
         }
-        
-        private string WithoutZeroAndSMTH(string str, int k)
+        //
+        //
+        //
+        //Copy string starting from string[k] char (inluding string[k])
+        //
+        //
+        //
+        private string CopyFromKChar(string str, int k)
         {
             string result = "";
             for (int i = k; i < str.Length; i++)
@@ -254,74 +432,18 @@ namespace sum
             }
             return result;
         }
-
-        private void SecondNumber_TextChanged(object sender, EventArgs e)
-        {
-            string str = SecondNumber.Text;
-
-
-            Tuple<double, bool> info = CheckStringAndConvert(str);
-
-            if (info.Item2 == true)
-            {
-                mistakeInSecond = true;
-                CheckMistakeSecond.Text = "*";
-
-            }
-            else
-            {
-                mistakeInSecond = false;
-                CheckMistakeSecond.Text = "OK";
-            }
-
-            if (mistakeInSecond == false)//deleting nbsp
-            {
-                str = GetStrWithOutNBSP(str);
-                SecondNumber.Text = str;
-                SecondNumber.SelectionStart = str.Length;
-            }
-            string buf = str;
-            str = FormatingZero(str);//getting string without first zeroes
-
-            if (str.Length != 0)
-            {
-                SecondNumber.Text = str;
-                SecondNumber.SelectionStart = str.Length;
-                buf = str;
-            }
-
-            str = ControlMinus(buf);//working on minus
-
-            if (str.Length != 0)
-            {
-                SecondNumber.Text = "-" + str;
-                SecondNumber.SelectionStart = str.Length + 1;
-            }
-
-            
-            
-
-            b = info.Item1;
-
-            PrintResult();
-        }
-
-        private void FirstNumber_Validating(object sender, CancelEventArgs e)
-        {
-            if (FirstNumber.Text.Length != 0)
-            {
-                if (FirstNumber.Text[FirstNumber.Text.Length - 1] == ',' || FirstNumber.Text[FirstNumber.Text.Length - 1] == '.')
-                {
-                    FirstNumber.Text = CopyNoLast(FirstNumber.Text);
-                }
-            }
-            
-        }
-
+        //
+        //
+        //
+        // From sequence of n comas delte n-1 ones 
+        //
+        //
+        //
         private string NoManyComas(string str)
         {
             string result = "";
             bool previousWasBadSign = false;
+
             for (int i = 0; i < str.Length; i++)
             {
                 if (str[i] == ',' && previousWasBadSign == false)
@@ -337,7 +459,13 @@ namespace sum
             }
             return result;
         }
-
+        //
+        //
+        //
+        // Returns a string without last char
+        //
+        //
+        //
         private string CopyNoLast(string str)
         {
             int len = str.Length - 1;
@@ -347,6 +475,61 @@ namespace sum
                 result += str[i];
             }
             return result;
+        }
+
+
+
+
+
+        /// <summary>
+        /// Block of events to correct input after losing focus
+        /// For both FIRST and SECOND numbers
+        /// Deleting last chars if they are "," or "."
+        /// </summary>
+        
+
+
+
+
+       
+        //
+        //
+        // FIRST number
+        // Deleting last sign if it is "," or "." after losing focus
+        // Works right after losing focus
+        //
+        //
+        //
+        private void FirstNumber_Validating(object sender, CancelEventArgs e)
+        {
+            string input = FirstNumber.Text;
+            int len = input.Length;
+            if (len != 0)
+            {
+                if (input[len - 1] == ',' || input[len - 1] == '.')
+                {
+                    FirstNumber.Text = CopyNoLast(input);
+                }
+            }           
+        }
+        //
+        //
+        // SECOND number
+        // Deleting last sign if it is "," or "." after losing focus
+        // Works right after losing focus
+        //
+        //
+        private void SecondNumber_Validating(object sender, CancelEventArgs e)
+        {
+            string input = SecondNumber.Text;
+            int len = input.Length;
+            if (len != 0)
+            {
+                if (input[len - 1] == ',' || input[len - 1] == '.')
+                {
+                    SecondNumber.Text = CopyNoLast(input);
+                }
+            }
         }
     }
 }

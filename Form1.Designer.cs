@@ -72,6 +72,7 @@ namespace sum
             this.SecondNumber.TabIndex = 1;
             this.SecondNumber.Text = "0";
             this.SecondNumber.TextChanged += new System.EventHandler(this.SecondNumber_TextChanged);
+            this.SecondNumber.Validating += new System.ComponentModel.CancelEventHandler(this.SecondNumber_Validating);
             // 
             // ResultLabel
             // 
@@ -242,9 +243,8 @@ namespace sum
             this.CheckMistakeFirst.ForeColor = System.Drawing.Color.Red;
             this.CheckMistakeFirst.Location = new System.Drawing.Point(1058, 265);
             this.CheckMistakeFirst.Name = "CheckMistakeFirst";
-            this.CheckMistakeFirst.Size = new System.Drawing.Size(104, 63);
+            this.CheckMistakeFirst.Size = new System.Drawing.Size(0, 63);
             this.CheckMistakeFirst.TabIndex = 15;
-            this.CheckMistakeFirst.Text = "OK";
             // 
             // CheckMistakeSecond
             // 
@@ -254,9 +254,8 @@ namespace sum
             this.CheckMistakeSecond.ForeColor = System.Drawing.Color.Red;
             this.CheckMistakeSecond.Location = new System.Drawing.Point(1058, 340);
             this.CheckMistakeSecond.Name = "CheckMistakeSecond";
-            this.CheckMistakeSecond.Size = new System.Drawing.Size(104, 63);
+            this.CheckMistakeSecond.Size = new System.Drawing.Size(0, 63);
             this.CheckMistakeSecond.TabIndex = 16;
-            this.CheckMistakeSecond.Text = "OK";
             // 
             // MainForm
             // 
