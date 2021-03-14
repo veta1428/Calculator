@@ -60,6 +60,7 @@ namespace sum
             this.FirstNumber.TabIndex = 0;
             this.FirstNumber.Text = "0";
             this.FirstNumber.TextChanged += new System.EventHandler(this.FirstNumber_TextChanged);
+            this.FirstNumber.Validating += new System.ComponentModel.CancelEventHandler(this.FirstNumber_Validating);
             // 
             // SecondNumber
             // 
@@ -237,23 +238,25 @@ namespace sum
             // 
             this.CheckMistakeFirst.AutoSize = true;
             this.CheckMistakeFirst.BackColor = System.Drawing.Color.White;
+            this.CheckMistakeFirst.Font = new System.Drawing.Font("Century Gothic", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.CheckMistakeFirst.ForeColor = System.Drawing.Color.Red;
             this.CheckMistakeFirst.Location = new System.Drawing.Point(1058, 265);
             this.CheckMistakeFirst.Name = "CheckMistakeFirst";
-            this.CheckMistakeFirst.Size = new System.Drawing.Size(76, 25);
+            this.CheckMistakeFirst.Size = new System.Drawing.Size(104, 63);
             this.CheckMistakeFirst.TabIndex = 15;
-            this.CheckMistakeFirst.Text = "testing";
+            this.CheckMistakeFirst.Text = "OK";
             // 
             // CheckMistakeSecond
             // 
             this.CheckMistakeSecond.AutoSize = true;
             this.CheckMistakeSecond.BackColor = System.Drawing.Color.White;
+            this.CheckMistakeSecond.Font = new System.Drawing.Font("Century Gothic", 19.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.CheckMistakeSecond.ForeColor = System.Drawing.Color.Red;
-            this.CheckMistakeSecond.Location = new System.Drawing.Point(1063, 340);
+            this.CheckMistakeSecond.Location = new System.Drawing.Point(1058, 340);
             this.CheckMistakeSecond.Name = "CheckMistakeSecond";
-            this.CheckMistakeSecond.Size = new System.Drawing.Size(76, 25);
+            this.CheckMistakeSecond.Size = new System.Drawing.Size(104, 63);
             this.CheckMistakeSecond.TabIndex = 16;
-            this.CheckMistakeSecond.Text = "testing";
+            this.CheckMistakeSecond.Text = "OK";
             // 
             // MainForm
             // 
